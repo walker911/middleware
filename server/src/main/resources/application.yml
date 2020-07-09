@@ -1,0 +1,20 @@
+server:
+  servlet:
+    context-path: /middleware
+  port: 8087
+
+spring:
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+    time-zone: GMT+8
+# database
+  datasource:
+    url: jdbc:mysql://localhost:3306/db_middleware?useUnicode=true&characterEncoding=utf-8
+    username: root
+    password: root
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    name: db_middleware
+# redis
+  redis:
+    host: 127.0.0.1
+    port: 6379
