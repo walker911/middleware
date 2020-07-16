@@ -4,7 +4,7 @@
 
     <!-- 根据商品编码查询 -->
     <select id="selectByCode" resultType="com.debug.middleware.model.entity.Item">
-        select id, code, name, create_time from item where code = #{code}
+        select id, code, name, create_time as createTime from item where code = #{code}
     </select>
 
 </mapper>
