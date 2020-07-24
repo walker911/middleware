@@ -3,6 +3,7 @@ package com.debug.middleware.server;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.scheduling.annotation.EnableAsync;
 
 /**
  * <p>
@@ -12,6 +13,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  * @author mu qin
  * @date 2020/7/8
  */
+@EnableAsync
 @SpringBootApplication
 @MapperScan(basePackages = "com.debug.middleware.model")
 public class MiddlewareServerApplication {
