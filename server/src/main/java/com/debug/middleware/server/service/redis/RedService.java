@@ -17,6 +17,6 @@ public interface RedService {
 
     void recordRedPacket(RedPacketDTO dto, String redId, List<Integer> amounts);
 
-    void recordRobRedPacket(Integer userId, String redId, BigDecimal amount);
+    void recordRobRedPacket(Long userId, String redId, BigDecimal amount);
 
 }

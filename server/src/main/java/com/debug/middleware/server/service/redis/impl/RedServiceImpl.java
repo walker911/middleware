@@ -1,6 +1,8 @@
 package com.debug.middleware.server.service.redis.impl;
 
+import com.debug.middleware.model.entity.RedDetail;
 import com.debug.middleware.model.entity.RedRecord;
+import com.debug.middleware.model.entity.RedRobRecord;
 import com.debug.middleware.model.mapper.RedDetailMapper;
 import com.debug.middleware.model.mapper.RedRecordMapper;
 import com.debug.middleware.model.mapper.RedRobRecordMapper;
@@ -43,11 +45,28 @@ public class RedServiceImpl implements RedService {
         redRecord.setTotal(dto.getTotal());
         redRecord.setRedPacket(redId);
         redRecord.setCreateTime(LocalDateTime.now());
+        redRecordMapper.save(redRecord);
 
+        RedDetail detail;
+        for (Integer amount : amounts) {
+            detail = new RedDetail();
+            detail.setRecordId(redRecord.getId());
+            detail.setAmount(BigDecimal.valueOf(amount));
+            detail.setCreateTime(LocalDateTime.now());
+            redDetailMapper.save(detail);
+        }
     }
 
+    @Async
     @Override
-    public void recordRobRedPacket(Integer userId, String redId, BigDecimal amount) {
+    public void recordRobRedPacket(Long userId, String redId, BigDecimal amount) {
+        RedRobRecord robRecord = new RedRobRecord();
+        robRecord.setUserId(userId);
+        robRecord.setRedPacket(redId);
+        robRecord.setAmount(amount);
+        robRecord.setRobTime(LocalDateTime.now());
+        robRecord.setCreateTime(LocalDateTime.now());
 
+        redRobRecordMapper.save(robRecord);
     }
 }

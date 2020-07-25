@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.debug.middleware.model.mapper.RedDetailMapper">
-    
-    
+
+    <!-- 保存 -->
+    <insert id="save" useGeneratedKeys="true" keyProperty="id" parameterType="com.debug.middleware.model.entity.RedDetail">
+        insert into red_detail (record_id, amount, create_time) VALUES
+        (#{recordId}, #{amount}, #{createTime})
+    </insert>
+
 </mapper>

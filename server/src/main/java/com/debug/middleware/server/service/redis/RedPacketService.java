@@ -16,6 +16,6 @@ public interface RedPacketService {
 
     String handOut(RedPacketDTO dto);
 
-    BigDecimal rob(Integer userId, String redId);
+    BigDecimal rob(Long userId, String redId);
 
 }

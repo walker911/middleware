@@ -3,8 +3,9 @@
 <mapper namespace="com.debug.middleware.model.mapper.RedRecordMapper">
 
     <!-- 保存 -->
-    <insert id="save" parameterType="com.debug.middleware.model.entity.RedRecord">
+    <insert id="save" useGeneratedKeys="true" keyProperty="id" parameterType="com.debug.middleware.model.entity.RedRecord">
         insert into red_record (user_id, red_packet, total, amount, create_time) VALUES
         (#{userId}, #{redPacket}, #{total}, #{amount}, #{createTime})
     </insert>
+
 </mapper>

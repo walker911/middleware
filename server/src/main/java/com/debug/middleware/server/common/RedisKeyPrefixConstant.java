@@ -10,6 +10,6 @@ package com.debug.middleware.server.common;
  */
 public class RedisKeyPrefixConstant {
 
-    public static final String RED_PACKET_PREFIX = "redis:red:packet";
+    public static final String RED_PACKET_PREFIX = "redis:red:packet:";
 
 }
