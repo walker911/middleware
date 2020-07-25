@@ -15,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -47,14 +48,16 @@ public class RedServiceImpl implements RedService {
         redRecord.setCreateTime(LocalDateTime.now());
         redRecordMapper.save(redRecord);
 
+        List<RedDetail> details = new ArrayList<>();
         RedDetail detail;
         for (Integer amount : amounts) {
             detail = new RedDetail();
             detail.setRecordId(redRecord.getId());
             detail.setAmount(BigDecimal.valueOf(amount));
             detail.setCreateTime(LocalDateTime.now());
-            redDetailMapper.save(detail);
+            details.add(detail);
         }
+        redDetailMapper.batchSave(details);
     }
 
     @Async

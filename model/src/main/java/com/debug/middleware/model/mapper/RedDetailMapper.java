@@ -2,6 +2,8 @@ package com.debug.middleware.model.mapper;
 
 import com.debug.middleware.model.entity.RedDetail;
 
+import java.util.List;
+
 /**
  * <p>
  *
@@ -14,4 +16,5 @@ public interface RedDetailMapper {
 
     void save(RedDetail detail);
 
+    int batchSave(List<RedDetail> details);
 }
