@@ -73,19 +73,27 @@ public class RedPacketServiceImpl implements RedPacketService {
 
         // 拆红包
         if (res) {
-            Object value = redisTemplate.opsForList().rightPop(redId);
-            if (value != null) {
-                String redTotalKey = redId + ":total";
-                Integer currTotal = valueOperations.get(redTotalKey) != null ? (Integer) valueOperations.get(redTotalKey) : 0;
-                valueOperations.set(redTotalKey, currTotal - 1);
+            // 锁
+            String lockKey = redId + userId + "_lock";
+            Boolean lock = valueOperations.setIfAbsent(lockKey, redId, 24L, TimeUnit.HOURS);
+            if (lock != null && lock) {
+                Object value = redisTemplate.opsForList().rightPop(redId);
+                if (value != null) {
+                    // 红包个数减一
+                    String redTotalKey = redId + ":total";
+                    valueOperations.decrement(redTotalKey, 1L);
+//                    Integer currTotal = valueOperations.get(redTotalKey) != null ? (Integer) valueOperations.get(redTotalKey) : 0;
+//                    valueOperations.set(redTotalKey, currTotal - 1);
 
-                BigDecimal result = new BigDecimal(value.toString()).divide(BigDecimal.valueOf(100), 2, RoundingMode.HALF_UP);
-                redService.recordRobRedPacket(userId, redId, new BigDecimal(value.toString()));
-                valueOperations.set(redId + userId + ":rob", result, 24L, TimeUnit.HOURS);
-                log.info("当前用户抢到红包了：userId={} key={} 金额={}", userId, redId, result);
+                    BigDecimal result = new BigDecimal(value.toString()).divide(BigDecimal.valueOf(100), 2, RoundingMode.HALF_UP);
+                    redService.recordRobRedPacket(userId, redId, new BigDecimal(value.toString()));
+                    valueOperations.set(redId + userId + ":rob", result, 24L, TimeUnit.HOURS);
+                    log.info("当前用户抢到红包了：userId={} key={} 金额={}", userId, redId, result);
 
-                return result;
+                    return result;
+                }
             }
+
         }
 
         return null;
