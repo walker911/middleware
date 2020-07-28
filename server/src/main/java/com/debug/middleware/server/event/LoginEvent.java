@@ -1,6 +1,5 @@
 package com.debug.middleware.server.event;
 
-import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
