@@ -1,5 +1,6 @@
 package com.debug.middleware.server.config;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.core.AcknowledgeMode;
 import org.springframework.amqp.core.Message;
 import org.springframework.amqp.rabbit.config.SimpleRabbitListenerContainerFactory;
@@ -20,6 +21,7 @@ import org.springframework.context.annotation.Configuration;
  * @author mu qin
  * @date 2020/7/27
  */
+@Slf4j
 @Configuration
 public class RabbitmqConfig {
 
@@ -93,11 +95,13 @@ public class RabbitmqConfig {
         // 构建发送消息组件实例对象
         RabbitTemplate rabbitTemplate = new RabbitTemplate(connectionFactory);
         rabbitTemplate.setMandatory(true);
+        // 发送消息后，若发送成功，则输出"消息发送成功"的反馈消息
         rabbitTemplate.setConfirmCallback((correlationData, ack, cause) -> {
-
+            log.info("消息发送成功：correlationData: {}, ack: {}, cause: {}", correlationData, ack, cause);
         });
         rabbitTemplate.setReturnCallback((message, replyCode, replyText, exchange, routingKey) -> {
-
+            log.info("消息丢失：message: {}, replyCode: {}, replyText: {}, exchange: {}, routingKey: {}",
+                    message, replyCode, replyText, exchange, routingKey);
         });
 
         return rabbitTemplate;
