@@ -1,8 +1,7 @@
 package com.debug.middleware.server.config;
 
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.amqp.core.AcknowledgeMode;
-import org.springframework.amqp.core.Message;
+import org.springframework.amqp.core.*;
 import org.springframework.amqp.rabbit.config.SimpleRabbitListenerContainerFactory;
 import org.springframework.amqp.rabbit.connection.CachingConnectionFactory;
 import org.springframework.amqp.rabbit.connection.CorrelationData;
@@ -12,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.amqp.SimpleRabbitListenerContainerFactoryConfigurer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.env.Environment;
 
 /**
  * <p>
@@ -27,10 +27,12 @@ public class RabbitmqConfig {
 
     private final CachingConnectionFactory connectionFactory;
     private final SimpleRabbitListenerContainerFactoryConfigurer factoryConfigurer;
+    private final Environment env;
 
-    public RabbitmqConfig(CachingConnectionFactory connectionFactory, SimpleRabbitListenerContainerFactoryConfigurer factoryConfigurer) {
+    public RabbitmqConfig(CachingConnectionFactory connectionFactory, SimpleRabbitListenerContainerFactoryConfigurer factoryConfigurer, Environment env) {
         this.connectionFactory = connectionFactory;
         this.factoryConfigurer = factoryConfigurer;
+        this.env = env;
     }
 
     /**
@@ -105,5 +107,37 @@ public class RabbitmqConfig {
         });
 
         return rabbitTemplate;
+    }
+
+    /**
+     * 创建简单消息模型：队列，交换机和路由
+     *
+     * 创建队列
+     *
+     * @return
+     */
+    @Bean(name = "basicQueue")
+    public Queue basicQueue() {
+        return new Queue(env.getProperty("mq.basic.info.queue.name"), true);
+    }
+
+    /**
+     * 创建交换机
+     *
+     * @return
+     */
+    @Bean
+    public DirectExchange basicExchange() {
+        return new DirectExchange(env.getProperty("mq.basic.info.exchange.name"));
+    }
+
+    /**
+     * 创建绑定
+     *
+     * @return
+     */
+    @Bean
+    public Binding basicBinding() {
+        return BindingBuilder.bind(basicQueue()).to(basicExchange()).with(env.getProperty("mq.basic.info.routing.key.name"));
     }
 }

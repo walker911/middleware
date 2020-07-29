@@ -27,6 +27,15 @@ spring:
     password: guest
 mq:
   env: local
+  basic:
+    info:
+      queue:
+        name: ${mq.env}.middleware.mq.basic.info.queue
+      exchange:
+        name: ${mq.env}.middleware.mq.basic.info.exchange
+      routing:
+        key:
+          name: ${mq.env}.middleware.mq.basic.info.routing.key
 # mybatis
 mybatis:
   mapper-locations: classpath:mapper/*.xml
