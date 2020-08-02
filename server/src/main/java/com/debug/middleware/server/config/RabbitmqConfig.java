@@ -57,6 +57,31 @@ public class RabbitmqConfig {
     }
 
     /**
+     * 单个消费者实例配置 - 确认模式为Auto
+     *
+     * @return
+     */
+    @Bean(name = "singleListenerContainerAuto")
+    public SimpleRabbitListenerContainerFactory listenerContainerAuto() {
+        // 定义消息监听器所在的容器工厂
+        SimpleRabbitListenerContainerFactory factory = new SimpleRabbitListenerContainerFactory();
+        // 设置容器工厂所用的实例
+        factory.setConnectionFactory(connectionFactory);
+        // 传输格式: Json
+        factory.setMessageConverter(new Jackson2JsonMessageConverter());
+        // 并发消费者实例的初始数量
+        factory.setConcurrentConsumers(1);
+        // 并发消费者实例的最大数量
+        factory.setMaxConcurrentConsumers(1);
+        // 并发消费者实例中每个实例拉取的消息数量
+        factory.setPrefetchCount(1);
+        // 设置确认消费模式为自动确认消费AUTO
+        factory.setAcknowledgeMode(AcknowledgeMode.AUTO);
+
+        return factory;
+    }
+
+    /**
      * 多个消费者实例的配置
      *
      * @return
