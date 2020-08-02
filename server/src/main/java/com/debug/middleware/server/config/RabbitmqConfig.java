@@ -4,10 +4,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.core.*;
 import org.springframework.amqp.rabbit.config.SimpleRabbitListenerContainerFactory;
 import org.springframework.amqp.rabbit.connection.CachingConnectionFactory;
-import org.springframework.amqp.rabbit.connection.CorrelationData;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.amqp.SimpleRabbitListenerContainerFactoryConfigurer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -110,34 +108,51 @@ public class RabbitmqConfig {
     }
 
     /**
-     * 创建简单消息模型：队列，交换机和路由
-     *
-     * 创建队列
-     *
-     * @return
+     * 创建消息模型 - fanoutExchange
+     * 队列1
      */
-    @Bean(name = "basicQueue")
-    public Queue basicQueue() {
-        return new Queue(env.getProperty("mq.basic.info.queue.name"), true);
+    @Bean(name = "fanoutQueueOne")
+    public Queue fanoutQueueOne() {
+        return new Queue(env.getProperty("mq.fanout.queue.one.name"), true);
     }
 
     /**
-     * 创建交换机
+     * 创建队列2
+     *
+     * @return
+     */
+    @Bean(name = "fanoutQueueTwo")
+    public Queue fanoutQueueTwo() {
+        return new Queue(env.getProperty("mq.fanout.queue.two.name"), true);
+    }
+
+    /**
+     * 创建交换机 - fanoutExchange
      *
      * @return
      */
     @Bean
-    public DirectExchange basicExchange() {
-        return new DirectExchange(env.getProperty("mq.basic.info.exchange.name"));
+    public FanoutExchange fanoutExchange() {
+        return new FanoutExchange(env.getProperty("mq.fanout.exchange.name"), true, false);
     }
 
     /**
-     * 创建绑定
+     * 创建绑定1
      *
      * @return
      */
     @Bean
-    public Binding basicBinding() {
-        return BindingBuilder.bind(basicQueue()).to(basicExchange()).with(env.getProperty("mq.basic.info.routing.key.name"));
+    public Binding fanoutBindingOne() {
+        return BindingBuilder.bind(fanoutQueueOne()).to(fanoutExchange());
+    }
+
+    /**
+     * 创建绑定2
+     *
+     * @return
+     */
+    @Bean
+    public Binding fanoutBindingTwo() {
+        return BindingBuilder.bind(fanoutQueueTwo()).to(fanoutExchange());
     }
 }

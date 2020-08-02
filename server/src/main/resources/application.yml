@@ -27,6 +27,7 @@ spring:
     password: guest
 mq:
   env: local
+# 基本消息模型
   basic:
     info:
       queue:
@@ -36,6 +37,25 @@ mq:
       routing:
         key:
           name: ${mq.env}.middleware.mq.basic.info.routing.key
+  # 基本消息模型
+  object:
+    info:
+      queue:
+        name: ${mq.env}.middleware.mq.object.info.queue
+      exchange:
+        name: ${mq.env}.middleware.mq.object.info.exchange
+      routing:
+        key:
+          name: ${mq.env}.middleware.mq.object.info.routing.key
+# 消息模型 - fanoutExchange
+  fanout:
+      queue:
+        one:
+          name: ${mq.env}.middleware.mq.fanout.one.queue
+        two:
+          name: ${mq.env}.middleware.mq.fanout.two.queue
+      exchange:
+        name: ${mq.env}.middleware.mq.fanout.exchange
 # mybatis
 mybatis:
   mapper-locations: classpath:mapper/*.xml
