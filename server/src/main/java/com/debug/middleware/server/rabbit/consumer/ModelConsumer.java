@@ -47,4 +47,24 @@ public class ModelConsumer {
             log.error("消息模型-消费者-发生异常：", e.fillInStackTrace());
         }
     }
+
+    @RabbitListener(queues = "${mq.direct.queue.one.name}", containerFactory = "singleListenerContainer")
+    public void consumerDirectMsgOne(Message message) {
+        try {
+            EventInfo info = objectMapper.readValue(message.getBody(), EventInfo.class);
+            log.info("消息模型directExchange-one-消费者-监听消费到消息：{}", info);
+        } catch (IOException e) {
+            log.error("消息模型directExchange-one-消费者-监听消费发送异常：", e.fillInStackTrace());
+        }
+    }
+
+    @RabbitListener(queues = "${mq.direct.queue.two.name}", containerFactory = "singleListenerContainer")
+    public void consumerDirectMsgTwo(Message message) {
+        try {
+            EventInfo info = objectMapper.readValue(message.getBody(), EventInfo.class);
+            log.info("消息模型directExchange-two-消费者-监听消费到消息：{}", info);
+        } catch (IOException e) {
+            log.error("消息模型directExchange-two-消费者-监听消费发送异常：", e.fillInStackTrace());
+        }
+    }
 }

@@ -155,4 +155,32 @@ public class RabbitmqConfig {
     public Binding fanoutBindingTwo() {
         return BindingBuilder.bind(fanoutQueueTwo()).to(fanoutExchange());
     }
+
+    /**
+     * 创建消息模型 - directExchange
+     */
+    @Bean
+    public DirectExchange directExchange() {
+        return new DirectExchange(env.getProperty("mq.direct.exchange.name"), true, false);
+    }
+
+    @Bean(name = "directQueueOne")
+    public Queue directQueueOne() {
+        return new Queue(env.getProperty("mq.direct.queue.one.name"), true);
+    }
+
+    @Bean(name = "directQueueTwo")
+    public Queue directQueueTwo() {
+        return new Queue(env.getProperty("mq.direct.queue.two.name"), true);
+    }
+
+    @Bean
+    public Binding directBindingOne() {
+        return BindingBuilder.bind(directQueueOne()).to(directExchange()).with(env.getProperty("mq.direct.routing.key.one.name"));
+    }
+
+    @Bean
+    public Binding directBindingTwo() {
+        return BindingBuilder.bind(directQueueTwo()).to(directExchange()).with(env.getProperty("mq.direct.routing.key.two.name"));
+    }
 }

@@ -40,4 +40,13 @@ public class RabbitmqTest {
         EventInfo info = new EventInfo(1, "增删改查模块", "基于fanoutExchange的消息模型", "这是基于fanoutExchange的消息模型");
         modelPublisher.sendMsg(info);
     }
+
+    @Test
+    public void testDirectExchange() {
+        EventInfo info = new EventInfo(1, "模块1", "directExchange", "direct");
+        modelPublisher.sendMsgDirectOne(info);
+
+        info = new EventInfo(2, "模块2", "directExchange", "direct");
+        modelPublisher.sendMsgDirectTwo(info);
+    }
 }
