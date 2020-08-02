@@ -183,4 +183,32 @@ public class RabbitmqConfig {
     public Binding directBindingTwo() {
         return BindingBuilder.bind(directQueueTwo()).to(directExchange()).with(env.getProperty("mq.direct.routing.key.two.name"));
     }
+
+    /**
+     * 创建消息模型 - topicExchange
+     */
+    @Bean
+    public TopicExchange topicExchange() {
+        return new TopicExchange(env.getProperty("mq.topic.exchange.name"), true, false);
+    }
+
+    @Bean(name = "topicQueueOne")
+    public Queue topicQueueOne() {
+        return new Queue(env.getProperty("mq.topic.queue.one.name"), true);
+    }
+
+    @Bean(name = "topicQueueTwo")
+    public Queue topicQueueTwo() {
+        return new Queue(env.getProperty("mq.topic.queue.two.name"), true);
+    }
+
+    @Bean
+    public Binding topBindingOne() {
+        return BindingBuilder.bind(topicQueueOne()).to(topicExchange()).with(env.getProperty("mq.topic.routing.key.one.name"));
+    }
+
+    @Bean
+    public Binding topBindingTwo() {
+        return BindingBuilder.bind(topicQueueTwo()).to(topicExchange()).with(env.getProperty("mq.topic.routing.key.two.name"));
+    }
 }

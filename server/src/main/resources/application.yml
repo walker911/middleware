@@ -71,6 +71,21 @@ mq:
           name: ${mq.env}.middleware.mq.direct.routing.key.one
         two:
           name: ${mq.env}.middleware.mq.direct.routing.key.two
+# 消息模型 - topicExchange
+  topic:
+    queue:
+      one:
+        name: ${mq.env}.middleware.mq.topic.one.queue
+      two:
+        name: ${mq.env}.middleware.mq.topic.two.queue
+    exchange:
+      name: ${mq.env}.middleware.mq.topic.exchange
+    routing:
+      key:
+        one:
+          name: ${mq.env}.middleware.mq.topic.routing.*.key
+        two:
+          name: ${mq.env}.middleware.mq.topic.routing.#.key
 # mybatis
 mybatis:
   mapper-locations: classpath:mapper/*.xml

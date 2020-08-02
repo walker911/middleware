@@ -1,4 +1,4 @@
-package com.debug.middleware.server.rabbit.publisher;
+package com.debug.middleware.server.rabbitmq.publisher;
 
 import com.debug.middleware.server.entity.Person;
 import com.fasterxml.jackson.databind.ObjectMapper;

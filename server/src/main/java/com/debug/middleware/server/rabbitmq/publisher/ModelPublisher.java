@@ -1,8 +1,10 @@
-package com.debug.middleware.server.rabbit.publisher;
+package com.debug.middleware.server.rabbitmq.publisher;
 
 import com.debug.middleware.server.entity.EventInfo;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.common.base.Strings;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.amqp.AmqpException;
 import org.springframework.amqp.core.Message;
 import org.springframework.amqp.core.MessageBuilder;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
@@ -80,6 +82,27 @@ public class ModelPublisher {
                 log.info("消息模型DirectExchange-two-生产者-发送消息：{}", info);
             } catch (Exception e) {
                 log.error("消息模型DirectExchange-two-生产者-发送消息发送异常：{}", info, e.fillInStackTrace());
+            }
+        }
+    }
+
+    /**
+     * 发送消息 - 基于TopicExchange消息模型
+     *
+     * @param msg
+     * @param routingKey
+     */
+    public void sendMsgTopic(String msg, String routingKey) {
+        if (!Strings.isNullOrEmpty(msg) && !Strings.isNullOrEmpty(routingKey)) {
+            try {
+                rabbitTemplate.setMessageConverter(new Jackson2JsonMessageConverter());
+                rabbitTemplate.setExchange(env.getProperty("mq.topic.exchange.name"));
+                rabbitTemplate.setRoutingKey(routingKey);
+
+                rabbitTemplate.convertAndSend(msg);
+                log.info("消息模型TopicExchange-生产者-发送消息：{}，路由：{}", msg, routingKey);
+            } catch (Exception e) {
+                log.error("消息模型TopicExchange-生产者-发送消息发送异常：{}", msg, e.fillInStackTrace());
             }
         }
     }

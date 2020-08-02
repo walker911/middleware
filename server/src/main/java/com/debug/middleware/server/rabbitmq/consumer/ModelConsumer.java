@@ -1,4 +1,4 @@
-package com.debug.middleware.server.rabbit.consumer;
+package com.debug.middleware.server.rabbitmq.consumer;
 
 import com.debug.middleware.server.entity.EventInfo;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -8,6 +8,7 @@ import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 
 /**
  * @author walker
@@ -65,6 +66,26 @@ public class ModelConsumer {
             log.info("消息模型directExchange-two-消费者-监听消费到消息：{}", info);
         } catch (IOException e) {
             log.error("消息模型directExchange-two-消费者-监听消费发送异常：", e.fillInStackTrace());
+        }
+    }
+
+    @RabbitListener(queues = "${mq.topic.queue.one.name}", containerFactory = "singleListenerContainer")
+    public void consumerTopicMsgOne(Message message) {
+        try {
+            String msg = new String(message.getBody(), StandardCharsets.UTF_8);
+            log.info("消息模型topicExchange-*-消费者-监听消费到消息：{}", msg);
+        } catch (Exception e) {
+            log.info("消息模型topicExchange-*-消费者-监听消费发送异常：", e.fillInStackTrace());
+        }
+    }
+
+    @RabbitListener(queues = "${mq.topic.queue.two.name}", containerFactory = "singleListenerContainer")
+    public void consumerTopicMsgTwo(Message message) {
+        try {
+            String msg = new String(message.getBody(), StandardCharsets.UTF_8);
+            log.info("消息模型topicExchange-#-消费者-监听消费到消息：{}", msg);
+        } catch (Exception e) {
+            log.info("消息模型topicExchange-#-消费者-监听消费发送异常：", e.fillInStackTrace());
         }
     }
 }

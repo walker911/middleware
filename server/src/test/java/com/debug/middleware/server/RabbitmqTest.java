@@ -2,8 +2,8 @@ package com.debug.middleware.server;
 
 import com.debug.middleware.server.entity.EventInfo;
 import com.debug.middleware.server.entity.Person;
-import com.debug.middleware.server.rabbit.publisher.BasicPublisher;
-import com.debug.middleware.server.rabbit.publisher.ModelPublisher;
+import com.debug.middleware.server.rabbitmq.publisher.BasicPublisher;
+import com.debug.middleware.server.rabbitmq.publisher.ModelPublisher;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -48,5 +48,16 @@ public class RabbitmqTest {
 
         info = new EventInfo(2, "模块2", "directExchange", "direct");
         modelPublisher.sendMsgDirectTwo(info);
+    }
+
+    @Test
+    public void testTopicExchange() {
+        String msg = "这是TopicExchange消息模型的消息";
+        String routingKeyOne = "local.middleware.mq.topic.routing.java.key";
+        String routingKeyTwo = "local.middleware.mq.topic.routing.php.python.key";
+        String routingKeyThree = "local.middleware.mq.topic.routing.key";
+//        modelPublisher.sendMsgTopic(msg, routingKeyOne);
+//        modelPublisher.sendMsgTopic(msg, routingKeyTwo);
+        modelPublisher.sendMsgTopic(msg, routingKeyThree);
     }
 }
