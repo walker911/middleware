@@ -86,6 +86,16 @@ mq:
           name: ${mq.env}.middleware.mq.topic.routing.*.key
         two:
           name: ${mq.env}.middleware.mq.topic.routing.#.key
+# 自动确认机制
+  auto:
+    knowledge:
+      queue:
+        name: ${mq.env}.middleware.auto.knowledge.queue
+      exchange:
+        name: ${mq.env}.middleware.auto.knowledge.exchange
+      routing:
+        key:
+          name: ${mq.env}.middleware.auto.knowledge.routing.key
 # mybatis
 mybatis:
   mapper-locations: classpath:mapper/*.xml

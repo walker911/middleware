@@ -236,4 +236,19 @@ public class RabbitmqConfig {
     public Binding topBindingTwo() {
         return BindingBuilder.bind(topicQueueTwo()).to(topicExchange()).with(env.getProperty("mq.topic.routing.key.two.name"));
     }
+
+    @Bean(name = "autoQueue")
+    public Queue autoQueue() {
+        return new Queue(env.getProperty("mq.auto.knowledge.queue.name"), true);
+    }
+
+    @Bean
+    public DirectExchange autoExchange() {
+        return new DirectExchange(env.getProperty("mq.auto.knowledge.exchange.name"), true, false);
+    }
+
+    @Bean
+    public Binding autoBinding() {
+        return BindingBuilder.bind(autoQueue()).to(autoExchange()).with(env.getProperty("mq.auto.knowledge.routing.key.name"));
+    }
 }

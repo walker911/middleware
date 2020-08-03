@@ -2,7 +2,9 @@ package com.debug.middleware.server;
 
 import com.debug.middleware.server.entity.EventInfo;
 import com.debug.middleware.server.entity.Person;
+import com.debug.middleware.server.rabbitmq.entity.KnowledgeInfo;
 import com.debug.middleware.server.rabbitmq.publisher.BasicPublisher;
+import com.debug.middleware.server.rabbitmq.publisher.KnowledgePublisher;
 import com.debug.middleware.server.rabbitmq.publisher.ModelPublisher;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +23,8 @@ public class RabbitmqTest {
     private BasicPublisher basicPublisher;
     @Autowired
     private ModelPublisher modelPublisher;
+    @Autowired
+    private KnowledgePublisher knowledgePublisher;
 
     @Test
     public void testBasic() {
@@ -59,5 +63,14 @@ public class RabbitmqTest {
 //        modelPublisher.sendMsgTopic(msg, routingKeyOne);
 //        modelPublisher.sendMsgTopic(msg, routingKeyTwo);
         modelPublisher.sendMsgTopic(msg, routingKeyThree);
+    }
+
+    @Test
+    public void testAuto() {
+        KnowledgeInfo info = new KnowledgeInfo();
+        info.setId(10010);
+        info.setCode("auto");
+        info.setMode("基于AUTO的消息确认消费模式");
+        knowledgePublisher.sendAutoMsg(info);
     }
 }
