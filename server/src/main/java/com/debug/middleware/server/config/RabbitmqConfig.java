@@ -82,6 +82,31 @@ public class RabbitmqConfig {
     }
 
     /**
+     * 单个消费者实例配置 - 确认模式为Auto
+     *
+     * @return
+     */
+    @Bean(name = "singleListenerContainerManual")
+    public SimpleRabbitListenerContainerFactory listenerContainerManual() {
+        // 定义消息监听器所在的容器工厂
+        SimpleRabbitListenerContainerFactory factory = new SimpleRabbitListenerContainerFactory();
+        // 设置容器工厂所用的实例
+        factory.setConnectionFactory(connectionFactory);
+        // 传输格式: Json
+        factory.setMessageConverter(new Jackson2JsonMessageConverter());
+        // 并发消费者实例的初始数量
+        factory.setConcurrentConsumers(1);
+        // 并发消费者实例的最大数量
+        factory.setMaxConcurrentConsumers(1);
+        // 并发消费者实例中每个实例拉取的消息数量
+        factory.setPrefetchCount(1);
+        // 设置确认消费模式为自动确认消费Manual
+        factory.setAcknowledgeMode(AcknowledgeMode.MANUAL);
+
+        return factory;
+    }
+
+    /**
      * 多个消费者实例的配置
      *
      * @return
@@ -251,4 +276,25 @@ public class RabbitmqConfig {
     public Binding autoBinding() {
         return BindingBuilder.bind(autoQueue()).to(autoExchange()).with(env.getProperty("mq.auto.knowledge.routing.key.name"));
     }
+
+    /**
+     * 确认模式为 - Manual
+     *
+     * @return
+     */
+    @Bean(name = "manualQueue")
+    public Queue manualQueue() {
+        return new Queue(env.getProperty("mq.manual.knowledge.queue.name"), true);
+    }
+
+    @Bean
+    public TopicExchange manualExchange() {
+        return new TopicExchange(env.getProperty("mq.manual.knowledge.exchange.name"), true, false);
+    }
+
+    @Bean
+    public Binding manualBinding() {
+        return BindingBuilder.bind(manualQueue()).to(manualExchange()).with(env.getProperty("mq.manual.knowledge.routing.key.name"));
+    }
+
 }

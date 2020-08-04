@@ -4,6 +4,7 @@ import com.debug.middleware.server.entity.EventInfo;
 import com.debug.middleware.server.entity.Person;
 import com.debug.middleware.server.rabbitmq.entity.KnowledgeInfo;
 import com.debug.middleware.server.rabbitmq.publisher.BasicPublisher;
+import com.debug.middleware.server.rabbitmq.publisher.KnowledgeManualPublisher;
 import com.debug.middleware.server.rabbitmq.publisher.KnowledgePublisher;
 import com.debug.middleware.server.rabbitmq.publisher.ModelPublisher;
 import org.junit.jupiter.api.Test;
@@ -25,6 +26,8 @@ public class RabbitmqTest {
     private ModelPublisher modelPublisher;
     @Autowired
     private KnowledgePublisher knowledgePublisher;
+    @Autowired
+    private KnowledgeManualPublisher knowledgeManualPublisher;
 
     @Test
     public void testBasic() {
@@ -72,5 +75,14 @@ public class RabbitmqTest {
         info.setCode("auto");
         info.setMode("基于AUTO的消息确认消费模式");
         knowledgePublisher.sendAutoMsg(info);
+    }
+
+    @Test
+    public void testManual() {
+        KnowledgeInfo info = new KnowledgeInfo();
+        info.setId(10011);
+        info.setCode("manual");
+        info.setMode("基于MANUAL的消息确认消费模式");
+        knowledgeManualPublisher.sendMsg(info);
     }
 }
