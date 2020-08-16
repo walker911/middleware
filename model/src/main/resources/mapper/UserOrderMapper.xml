@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.debug.middleware.model.mapper.UserOrderMapper">
+
+    <!-- 保存 -->
+    <insert id="save" parameterType="com.debug.middleware.model.entity.UserOrder" useGeneratedKeys="true" keyProperty="id">
+        insert into user_order(order_no, user_id, status, create_time) values (#{orderNo}, #{userId}, #{status}, #{createTime})
+    </insert>
+</mapper>
