@@ -106,6 +106,26 @@ mq:
       routing:
         key:
           name: ${mq.env}.middleware.manual.knowledge.routing.key
+  # 死信队列消息模型
+  dead:
+    queue:
+      name: ${mq.env}.middleware.dead.queue
+    exchange:
+      name: ${mq.env}.middleware.dead.exchange
+    routing:
+      key:
+        name: ${mq.env}.middleware.dead.routing.key
+  producer:
+    basic:
+      exchange:
+        name: ${mq.env}.middleware.producer.basic.exchange
+      routing:
+        key:
+          name: ${mq.env}.middleware.producer.basic.routing.key
+  consumer:
+    real:
+      queue:
+        name: ${mq.env}.middleware.consumer.real.queue
 # mybatis
 mybatis:
   mapper-locations: classpath:mapper/*.xml

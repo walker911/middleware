@@ -2,11 +2,9 @@ package com.debug.middleware.server;
 
 import com.debug.middleware.server.entity.EventInfo;
 import com.debug.middleware.server.entity.Person;
+import com.debug.middleware.server.rabbitmq.entity.DeadInfo;
 import com.debug.middleware.server.rabbitmq.entity.KnowledgeInfo;
-import com.debug.middleware.server.rabbitmq.publisher.BasicPublisher;
-import com.debug.middleware.server.rabbitmq.publisher.KnowledgeManualPublisher;
-import com.debug.middleware.server.rabbitmq.publisher.KnowledgePublisher;
-import com.debug.middleware.server.rabbitmq.publisher.ModelPublisher;
+import com.debug.middleware.server.rabbitmq.publisher.*;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -28,6 +26,8 @@ public class RabbitmqTest {
     private KnowledgePublisher knowledgePublisher;
     @Autowired
     private KnowledgeManualPublisher knowledgeManualPublisher;
+    @Autowired
+    private DeadPublisher deadPublisher;
 
     @Test
     public void testBasic() {
@@ -84,5 +84,14 @@ public class RabbitmqTest {
         info.setCode("manual");
         info.setMode("基于MANUAL的消息确认消费模式");
         knowledgeManualPublisher.sendMsg(info);
+    }
+
+    @Test
+    public void testDead() throws Exception {
+        DeadInfo info = new DeadInfo(1, "~~~我是第一则消息~~~");
+        deadPublisher.sendMsg(info);
+        info = new DeadInfo(2, "~~~~我是第二则消息~~~");
+        deadPublisher.sendMsg(info);
+        Thread.sleep(30000);
     }
 }
