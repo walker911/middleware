@@ -21,6 +21,12 @@ public class UserOrderController {
         this.userOrderService = userOrderService;
     }
 
+    /**
+     * 用户下单请求的接收与处理
+     *
+     * @param dto
+     * @return
+     */
     @PostMapping(value = "/user/order/push")
     public BaseResponse<String> order(@RequestBody UserOrderDTO dto) {
         BaseResponse<String> response = new BaseResponse<>(StatusCode.SUCCESS);

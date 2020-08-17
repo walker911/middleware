@@ -15,4 +15,12 @@ public interface UserOrderMapper {
      * @return
      */
     int save(UserOrder order);
+
+    /**
+     * 更新
+     *
+     * @param order
+     * @return
+     */
+    int update(UserOrder order);
 }

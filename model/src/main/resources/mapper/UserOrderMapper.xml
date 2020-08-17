@@ -6,4 +6,9 @@
     <insert id="save" parameterType="com.debug.middleware.model.entity.UserOrder" useGeneratedKeys="true" keyProperty="id">
         insert into user_order(order_no, user_id, status, create_time) values (#{orderNo}, #{userId}, #{status}, #{createTime})
     </insert>
+
+    <!-- 更新 -->
+    <update id="update" parameterType="com.debug.middleware.model.entity.UserOrder">
+        update user_order set
+    </update>
 </mapper>
