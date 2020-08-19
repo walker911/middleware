@@ -1,6 +1,7 @@
 package com.debug.middleware.model.mapper;
 
 import com.debug.middleware.model.entity.UserOrder;
+import org.apache.ibatis.annotations.Param;
 
 /**
  * @author walker
@@ -23,4 +24,6 @@ public interface UserOrderMapper {
      * @return
      */
     int update(UserOrder order);
+
+    UserOrder selectByIdAndStatus(@Param("orderId") Integer orderId, @Param("status") Integer status);
 }

@@ -9,6 +9,11 @@
 
     <!-- 更新 -->
     <update id="update" parameterType="com.debug.middleware.model.entity.UserOrder">
-        update user_order set
+        update user_order set is_active = #{isActive}, update_time = #{updateTime} where id = #{id}
     </update>
+
+    <select id="selectByIdAndStatus" resultType="com.debug.middleware.model.entity.UserOrder">
+        select id, order_no as orderNo, user_id as userId, status, create_time as createTime from user_order
+        where id = #{orderId} and status = #{status} and is_active = 1
+    </select>
 </mapper>
