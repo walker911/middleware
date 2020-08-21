@@ -135,7 +135,7 @@ mq:
     order:
       real:
         queue:
-          name: ${mq.env}.middleware.consumer.real.queue
+          name: ${mq.env}.middleware.consumer.order.real.queue
 # 用户下单支付超时-死信队列消息模型
   order:
     dead:
