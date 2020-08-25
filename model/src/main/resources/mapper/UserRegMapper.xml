@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.debug.middleware.model.mapper.UserRegMapper">
+
+    <!-- 保存 -->
+    <insert id="save" parameterType="com.debug.middleware.model.entity.UserReg">
+        insert into user_reg (user_name, password, create_time) values (#{username}, #{password}, #{createTime})
+    </insert>
+
+    <!-- 根据username查询 -->
+    <select id="selectByUsername" resultType="com.debug.middleware.model.entity.UserReg">
+        select id, user_name as username, create_time as createTime where username = #{username}
+    </select>
+</mapper>
