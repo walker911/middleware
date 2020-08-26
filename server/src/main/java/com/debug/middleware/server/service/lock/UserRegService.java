@@ -16,4 +16,5 @@ public interface UserRegService {
 
     void userRegWithLock(UserRegDTO dto);
 
+    void userRegRedisson(UserRegDTO dto);
 }

@@ -37,6 +37,7 @@ public class UserRegController {
         try {
             userRegService.userRegNoLock(dto);
             // userRegService.userRegWithLock(dto);
+            // userRegService.userRegRedisson(dto);
         } catch (Exception e) {
             log.error("用户注册异常", e);
             response = new BaseResponse<>(StatusCode.FAIL.getCode(), e.getMessage());

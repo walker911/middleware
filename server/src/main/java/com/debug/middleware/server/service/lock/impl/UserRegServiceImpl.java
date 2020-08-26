@@ -4,6 +4,8 @@ import com.debug.middleware.model.entity.UserReg;
 import com.debug.middleware.model.mapper.UserRegMapper;
 import com.debug.middleware.server.dto.UserRegDTO;
 import com.debug.middleware.server.service.lock.UserRegService;
+import org.redisson.api.RLock;
+import org.redisson.api.RedissonClient;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Service;
@@ -26,10 +28,12 @@ public class UserRegServiceImpl implements UserRegService {
 
     private final UserRegMapper userRegMapper;
     private final StringRedisTemplate stringRedisTemplate;
+    private final RedissonClient redissonClient;
 
-    public UserRegServiceImpl(UserRegMapper userRegMapper, StringRedisTemplate stringRedisTemplate) {
+    public UserRegServiceImpl(UserRegMapper userRegMapper, StringRedisTemplate stringRedisTemplate, RedissonClient redissonClient) {
         this.userRegMapper = userRegMapper;
         this.stringRedisTemplate = stringRedisTemplate;
+        this.redissonClient = redissonClient;
     }
 
     /**
@@ -67,6 +71,26 @@ public class UserRegServiceImpl implements UserRegService {
                 if (value.equals(valueOperations.get(key))) {
                     stringRedisTemplate.delete(key);
                 }
+            }
+        }
+    }
+
+    /**
+     * 用户注册 - redisson锁
+     *
+     * @param dto
+     */
+    @Override
+    @Transactional
+    public void userRegRedisson(UserRegDTO dto) {
+        final String lockName = "redisson:one:lock:" + dto.getUsername();
+        RLock lock = redissonClient.getLock(lockName);
+        try {
+            lock.lock(10, TimeUnit.SECONDS);
+            checkAndSaveUser(dto);
+        } finally {
+            if (lock != null) {
+                lock.unlock();
             }
         }
     }

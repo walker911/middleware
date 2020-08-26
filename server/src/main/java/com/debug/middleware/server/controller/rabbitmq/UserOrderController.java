@@ -1,4 +1,4 @@
-package com.debug.middleware.server.controller;
+package com.debug.middleware.server.controller.rabbitmq;
 
 import com.debug.middleware.api.BaseResponse;
 import com.debug.middleware.api.enums.StatusCode;
