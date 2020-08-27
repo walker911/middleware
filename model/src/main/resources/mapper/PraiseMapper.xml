@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.debug.middleware.model.mapper.PraiseMapper">
+
+    <!-- 保存点赞记录 -->
+    <insert id="save">
+        insert into praise (blog_id, user_id, praise_time, status, is_active, create_time)
+        values (#{blogId}, #{userId}, #{praiseTime}, #{status}, #{isActive}, #{createTime})
+    </insert>
+
+    <!-- 查询点赞记录 -->
+    <select id="selectByBlogUserId" resultType="com.debug.middleware.model.entity.Praise">
+        select id,
+               blog_id     as blogId,
+               user_id     as userId,
+               praise_time as praiseTime,
+               status,
+               is_active   as isActive,
+               create_time as createTime,
+               update_time as updateTime
+        from praise
+        where status = 1 and is_active = 1 and blog_id = #{blogId} and user_id = #{userId}
+    </select>
+
+    <!-- 根据blogId查询点赞总数 -->
+    <select id="countByBlogId" resultType="int">
+        select count(*) from praise where status = 1 and is_active = 1 and blog_id = #{blogId}
+    </select>
+
+    <!-- 取消点赞 -->
+    <update id="cancelPraise">
+        update praise set status = 0 where is_active = 1 and status = 1 and blog_id = #{blogId} and user_id = #{userId}
+    </update>
+
+    <!-- 获取点赞排行榜 -->
+    <select id="getPraiseRank" resultType="com.debug.middleware.model.dto.PraiseRankDTO">
+        select blog_id as blogId, count(id) as total from praise where status = 1 and is_active = 1
+        group by blog_id order by total desc
+    </select>
+
+</mapper>
