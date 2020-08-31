@@ -41,14 +41,27 @@ public class PraiseController {
             log.error("点赞博客-发生异常：{}", dto, e.fillInStackTrace());
             response = new BaseResponse<>(StatusCode.FAIL.getCode(), e.getMessage());
         }
-
         response.setData(params);
+
         return response;
     }
 
     @PostMapping(value = "/blog/praise/cancel")
-    public BaseResponse<String> cancelPraise(@RequestBody PraiseDTO dto) {
-        return null;
+    public BaseResponse<Map<String, Object>> cancelPraise(@RequestBody PraiseDTO dto) {
+        BaseResponse<Map<String, Object>> response = new BaseResponse<>(StatusCode.SUCCESS);
+        Map<String, Object> params = new HashMap<>();
+
+        try {
+            praiseService.cancelPraise(dto);
+            long total = praiseService.getBlogPraiseTotal(dto.getBlogId());
+            params.put("total", total);
+        } catch (Exception e) {
+            log.error("取消点赞博客-发生异常：{}", dto, e.fillInStackTrace());
+            response = new BaseResponse<>(StatusCode.FAIL.getCode(), e.getMessage());
+        }
+        response.setData(params);
+
+        return response;
     }
 
 }
