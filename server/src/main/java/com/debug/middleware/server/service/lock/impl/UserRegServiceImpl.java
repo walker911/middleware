@@ -76,7 +76,7 @@ public class UserRegServiceImpl implements UserRegService {
     }
 
     /**
-     * 用户注册 - redisson锁
+     * 用户注册 - redisson锁 - 一次性锁
      *
      * @param dto
      */
@@ -86,6 +86,7 @@ public class UserRegServiceImpl implements UserRegService {
         final String lockName = "redisson:one:lock:" + dto.getUsername();
         RLock lock = redissonClient.getLock(lockName);
         try {
+            // 10s自动释放，到时间自动释放，避免死锁的出现
             lock.lock(10, TimeUnit.SECONDS);
             checkAndSaveUser(dto);
         } finally {
