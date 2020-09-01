@@ -1,12 +1,15 @@
 package com.debug.middleware.server.service.redisson.impl;
 
 import com.debug.middleware.model.dto.PraiseRankDTO;
+import com.debug.middleware.model.mapper.PraiseMapper;
 import com.debug.middleware.server.service.redisson.RedisPraiseService;
 import lombok.extern.slf4j.Slf4j;
+import org.redisson.api.RList;
 import org.redisson.api.RLock;
 import org.redisson.api.RMap;
 import org.redisson.api.RedissonClient;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import java.util.List;
 import java.util.Map;
@@ -26,9 +29,11 @@ public class RedisPraiseServiceImpl implements RedisPraiseService {
 
     private static final String BLOG_KEY = "RedisBlogPraiseMap";
     private final RedissonClient redissonClient;
+    private final PraiseMapper praiseMapper;
 
-    public RedisPraiseServiceImpl(RedissonClient redissonClient) {
+    public RedisPraiseServiceImpl(RedissonClient redissonClient, PraiseMapper praiseMapper) {
         this.redissonClient = redissonClient;
+        this.praiseMapper = praiseMapper;
     }
 
     @Override
@@ -78,11 +83,21 @@ public class RedisPraiseServiceImpl implements RedisPraiseService {
 
     @Override
     public void rankBlogPraise() {
+        final String key = "PraiseRankListKey";
 
+        List<PraiseRankDTO> dtos = praiseMapper.getPraiseRank();
+        if (!CollectionUtils.isEmpty(dtos)) {
+            RList<PraiseRankDTO> list = redissonClient.getList(key);
+            list.clear();
+            list.addAll(dtos);
+        }
     }
 
     @Override
     public List<PraiseRankDTO> getBlogPraiseRank() {
-        return null;
+        final String key = "PraiseRankListKey";
+        RList<PraiseRankDTO> list = redissonClient.getList(key);
+
+        return list.readAll();
     }
 }

@@ -17,7 +17,7 @@ public interface PraiseService {
 
     void addPraise(PraiseDTO dto) throws Exception;
 
-    void addPraiseLock(PraiseDTO dto);
+    void addPraiseLock(PraiseDTO dto) throws Exception;
 
     void cancelPraise(PraiseDTO dto) throws Exception;
 
