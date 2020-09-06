@@ -210,3 +210,23 @@ create table sys_login_log
     last_update_time datetime    null comment '更新时间'
 )
     comment '系统登录日志表';
+
+create table book_stock
+(
+    id        int auto_increment comment '主键id'
+        primary key,
+    book_no   varchar(50) null comment '书籍编号',
+    stock     int         null comment '库存',
+    is_active tinyint     null comment '是否上架'
+)
+    comment '书籍记录库存表';
+
+create table book_rob
+(
+    id       int auto_increment comment '主键id'
+        primary key,
+    user_id  int         null comment '用户id',
+    book_no  varchar(50) null comment '书籍编号',
+    rob_time datetime    null comment '抢购时间'
+)
+    comment '书籍抢购记录表';
