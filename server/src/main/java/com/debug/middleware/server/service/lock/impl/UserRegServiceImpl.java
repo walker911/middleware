@@ -4,6 +4,8 @@ import com.debug.middleware.model.entity.UserReg;
 import com.debug.middleware.model.mapper.UserRegMapper;
 import com.debug.middleware.server.dto.UserRegDTO;
 import com.debug.middleware.server.service.lock.UserRegService;
+import org.apache.curator.framework.CuratorFramework;
+import org.apache.curator.framework.recipes.locks.InterProcessMutex;
 import org.redisson.api.RLock;
 import org.redisson.api.RedissonClient;
 import org.springframework.data.redis.core.StringRedisTemplate;
@@ -26,14 +28,18 @@ import java.util.concurrent.TimeUnit;
 @Service
 public class UserRegServiceImpl implements UserRegService {
 
+    public static final String PATH_PREFIX = "/middleware/zkLock/";
+
     private final UserRegMapper userRegMapper;
     private final StringRedisTemplate stringRedisTemplate;
     private final RedissonClient redissonClient;
+    private final CuratorFramework client;
 
-    public UserRegServiceImpl(UserRegMapper userRegMapper, StringRedisTemplate stringRedisTemplate, RedissonClient redissonClient) {
+    public UserRegServiceImpl(UserRegMapper userRegMapper, StringRedisTemplate stringRedisTemplate, RedissonClient redissonClient, CuratorFramework client) {
         this.userRegMapper = userRegMapper;
         this.stringRedisTemplate = stringRedisTemplate;
         this.redissonClient = redissonClient;
+        this.client = client;
     }
 
     /**
@@ -93,6 +99,26 @@ public class UserRegServiceImpl implements UserRegService {
             if (lock != null) {
                 lock.unlock();
             }
+        }
+    }
+
+    /**
+     * 用户注册 -zookeeper 锁
+     *
+     * @param dto
+     */
+    @Override
+    @Transactional
+    public void userRegWithZKLock(UserRegDTO dto) throws Exception {
+        InterProcessMutex mutex = new InterProcessMutex(client, PATH_PREFIX + dto.getUsername() + "-lock");
+        try {
+            if (mutex.acquire(10, TimeUnit.SECONDS)) {
+                checkAndSaveUser(dto);
+            } else {
+                throw new RuntimeException("获取锁失败");
+            }
+        } finally {
+            mutex.release();
         }
     }
 

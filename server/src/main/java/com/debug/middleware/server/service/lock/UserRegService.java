@@ -17,4 +17,6 @@ public interface UserRegService {
     void userRegWithLock(UserRegDTO dto);
 
     void userRegRedisson(UserRegDTO dto);
+
+    void userRegWithZKLock(UserRegDTO dto) throws Exception;
 }
